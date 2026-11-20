@@ -1,17 +1,22 @@
-# Supabase migration status
+# URWA Supabase migration status
 
-The legacy URWA website and portal source has been imported from the original `aaliyanah56/Urwa` repository.
+## Migrated to Supabase
+- Browser authentication: student registration, student/teacher/admin sign-in, role and approval checks, logout, email verification, password reset.
+- Student dashboard data: enrolment, attendance summary, assignments, Hifdh and Muraja’ah counts.
+- Teacher dashboard data/actions: assigned halaqas, approved student roster, assignment creation, attendance recording.
+- Admin dashboard data/actions: student admissions, profile approval, halaqa assignment, teacher assignment, announcements.
+- Department tracker: department memberships, goals, reports, goal status updates and report review.
 
 ## Important
-- Public website pages, stylesheets, scripts, portal HTML, and Firebase-era backend files are included as a source baseline.
-- The legacy portal backend files (`js/firebase.js`, `js/firebase-auth.js`, `js/dashboard-data.js`, and `js/department-tracker.js`) still use Firebase. They are retained for reference and are **not yet migrated to Supabase**.
-- The existing Supabase client in `js/supabase.js` remains the intended backend connection for the migration.
-- Existing Supabase project data must be preserved. Do not drop, reset, or recreate its tables.
-- Binary image assets were not copied in this transfer. The two original files remain in `assets/` in the legacy repository and must be copied as binary files before local image paths will resolve.
+- All migrated operations use the existing Supabase project and existing tables.
+- Existing Supabase records were not dropped, reset, or recreated.
+- The legacy Firebase configuration and Firestore rules remain in the repository as migration history/reference; migrated dashboard/auth scripts no longer import them.
+- Public pages are imported. Binary image assets (`assets/logo.jpg` and `assets/event calender.jpg`) still need a binary-safe transfer from the legacy repository.
+- Staff accounts must be provisioned by a trusted administrator. Public student registration only creates the pending student role via the existing database trigger.
+- Browser code uses only the publishable key; never put a service-role or secret key in the repository.
 
-## Remaining migration work
-1. Copy `assets/logo.jpg` and `assets/event calender.jpg` from the legacy repository.
-2. Replace Firebase authentication with Supabase Auth.
-3. Migrate dashboard and department queries to the existing Supabase schema.
-4. Verify RLS policies and profile/role creation before enabling portal actions.
-5. Test public pages and each role's sign-in/dashboard before production promotion.
+## Before production
+1. Verify Supabase Auth Site URL and redirect allow-list for the live URWA domain and local development.
+2. Test student sign-up and email verification, approval, all role logins, password reset, attendance, assignments, announcements and department access.
+3. Review Supabase security advisor findings, especially callable SECURITY DEFINER helpers and leaked-password protection.
+4. Test all flows against the deployed Cloudflare site and confirm image assets are present.
