@@ -1,0 +1,1049 @@
+
+/* =====================================================
+   URWA PORTAL DESIGN SYSTEM
+   Student • Abla • Administrator
+   ===================================================== */
+
+:root {
+    --green: #1f2a44;
+    --green-dark: #151e32;
+    --green-light: #e8dcc8;
+    --green-soft: #f1eadc;
+    --gold: #c6a75e;
+    --gold-light: #e5d3a5;
+    --cream: #fbfaf7;
+    --white: #ffffff;
+    --ink: #17191e;
+    --muted: #687080;
+    --line: #e8e5de;
+    --red: #d95353;
+    --red-soft: #fdebec;
+    --blue: #4776d0;
+    --blue-soft: #eaf0ff;
+    --yellow-soft: #fff8e6;
+    --shadow: 0 5px 22px rgba(31, 42, 68, .09);
+    --radius: 15px;
+    --sidebar-width: 250px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    color: var(--ink);
+    background: #fbfaf7;
+    line-height: 1.55;
+}
+
+button, input, select, textarea {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+img {
+    max-width: 100%;
+}
+
+/* ---------- GENERAL LAYOUT ---------- */
+
+.urwa-app {
+    min-height: 100vh;
+}
+
+.urwa-layout {
+    min-height: 100vh;
+    display: flex;
+}
+
+.urwa-sidebar {
+    width: var(--sidebar-width);
+    height: 100vh;
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    background: var(--white);
+    border-right: 1px solid var(--line);
+    overflow-y: auto;
+}
+
+.urwa-main {
+    width: calc(100% - var(--sidebar-width));
+    min-height: 100vh;
+    margin-left: var(--sidebar-width);
+}
+
+.urwa-content {
+    width: min(1500px, 100%);
+    margin: 0 auto;
+    padding: 30px;
+}
+
+.urwa-topbar {
+    min-height: 76px;
+    padding: 14px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    background: var(--white);
+    border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: 0;
+    z-index: 30;
+}
+
+.urwa-topbar-left,
+.urwa-topbar-right,
+.urwa-brand,
+.urwa-user,
+.urwa-actions {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+}
+
+.urwa-topbar-title {
+    color: var(--green);
+    font-size: 1.12rem;
+    font-weight: 700;
+}
+
+.urwa-page-heading {
+    margin-bottom: 24px;
+}
+
+.urwa-page-heading h1 {
+    color: var(--green);
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    margin-bottom: 4px;
+}
+
+.urwa-page-heading p {
+    color: var(--muted);
+    font-size: .92rem;
+}
+
+/* ---------- BRAND / SIDEBAR ---------- */
+
+.urwa-brand {
+    min-height: 84px;
+    padding: 18px 22px;
+    border-bottom: 1px solid var(--line);
+}
+
+.urwa-brand img {
+    width: 43px;
+    height: 43px;
+    object-fit: contain;
+}
+
+.urwa-brand-name {
+    color: var(--green);
+    font-size: 1.25rem;
+    font-weight: 750;
+    letter-spacing: -.4px;
+}
+
+.urwa-brand-tagline {
+    color: var(--muted);
+    font-size: .68rem;
+    letter-spacing: .4px;
+}
+
+.urwa-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 22px 20px;
+    border-bottom: 1px solid var(--line);
+}
+
+.urwa-avatar {
+    width: 46px;
+    height: 46px;
+    flex: 0 0 46px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1f2a44, #303849);
+    color: var(--white);
+    font-weight: 700;
+    font-size: 1.05rem;
+}
+
+.urwa-profile strong {
+    display: block;
+    color: var(--ink);
+    font-size: .95rem;
+}
+
+.urwa-profile span {
+    display: block;
+    color: var(--muted);
+    font-size: .82rem;
+}
+
+.urwa-nav {
+    padding: 16px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.urwa-nav-label {
+    padding: 13px 12px 7px;
+    color: #9aa49f;
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.urwa-nav a {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 10px 13px;
+    border-radius: 10px;
+    color: #687080;
+    font-size: .9rem;
+    transition: .2s ease;
+}
+
+.urwa-nav a:hover {
+    color: var(--green);
+    background: var(--green-soft);
+}
+
+.urwa-nav a.active {
+    color: var(--green);
+    background: var(--green-light);
+    font-weight: 700;
+}
+
+.urwa-nav-icon {
+    width: 21px;
+    text-align: center;
+    font-size: 1.05rem;
+}
+
+.urwa-nav-count {
+    margin-left: auto;
+    padding: 2px 8px;
+    border-radius: 20px;
+    background: var(--red-soft);
+    color: var(--red);
+    font-size: .72rem;
+    font-weight: 700;
+}
+
+.urwa-sidebar-bottom {
+    margin-top: auto;
+    padding: 15px 12px 20px;
+    border-top: 1px solid var(--line);
+}
+
+.urwa-sidebar-bottom a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 13px;
+    color: var(--muted);
+    border-radius: 9px;
+    font-size: .88rem;
+}
+
+.urwa-sidebar-bottom a:hover {
+    background: var(--green-soft);
+    color: var(--green);
+}
+
+/* ---------- TOPBAR ---------- */
+
+.urwa-search {
+    width: min(340px, 32vw);
+    position: relative;
+}
+
+.urwa-search input {
+    width: 100%;
+    height: 42px;
+    padding: 0 14px 0 40px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    outline: none;
+    background: #fbfaf7;
+    font-size: .84rem;
+}
+
+.urwa-search::before {
+    content: "⌕";
+    position: absolute;
+    left: 14px;
+    top: 5px;
+    color: var(--muted);
+    font-size: 1.35rem;
+}
+
+.urwa-icon-button {
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--line);
+    border-radius: 11px;
+    background: var(--white);
+    color: var(--green);
+    font-size: 1.05rem;
+}
+
+.urwa-user-name {
+    font-size: .86rem;
+    font-weight: 700;
+}
+
+.urwa-user-role {
+    color: var(--muted);
+    font-size: .74rem;
+}
+
+.urwa-menu-button {
+    display: none;
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--white);
+    color: var(--green);
+    font-size: 1.3rem;
+}
+
+/* ---------- BUTTONS ---------- */
+
+.urwa-btn {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 9px 16px;
+    border: 1px solid transparent;
+    border-radius: 9px;
+    font-size: .84rem;
+    font-weight: 700;
+    transition: .2s ease;
+}
+
+.urwa-btn-primary {
+    background: var(--green);
+    color: var(--white);
+}
+
+.urwa-btn-primary:hover {
+    background: var(--green-dark);
+}
+
+.urwa-btn-gold {
+    background: var(--gold);
+    color: var(--green-dark);
+}
+
+.urwa-btn-outline {
+    background: var(--white);
+    color: var(--green);
+    border-color: var(--line);
+}
+
+.urwa-btn-outline:hover {
+    border-color: var(--green);
+}
+
+.urwa-btn-small {
+    min-height: 32px;
+    padding: 6px 11px;
+    font-size: .76rem;
+}
+
+/* ---------- CARDS / GRIDS ---------- */
+
+.urwa-grid {
+    display: grid;
+    gap: 18px;
+}
+
+.urwa-grid-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.urwa-grid-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.urwa-grid-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.urwa-grid-5 {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.urwa-card {
+    min-width: 0;
+    padding: 21px;
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.urwa-card-title {
+    color: var(--green);
+    font-size: 1rem;
+    font-weight: 750;
+}
+
+.urwa-card-subtitle {
+    margin-top: 3px;
+    color: var(--muted);
+    font-size: .8rem;
+}
+
+.urwa-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+.urwa-section-title {
+    color: var(--green);
+    font-size: 1.05rem;
+    font-weight: 750;
+    margin: 25px 0 14px;
+}
+
+/* ---------- WELCOME BANNER ---------- */
+
+.urwa-welcome {
+    padding: 27px 30px;
+    margin-bottom: 22px;
+    border-radius: var(--radius);
+    color: var(--white);
+    background: linear-gradient(115deg, var(--green-dark), #303849);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.urwa-welcome h2 {
+    font-size: 1.55rem;
+    margin-bottom: 5px;
+}
+
+.urwa-welcome p {
+    color: rgba(255,255,255,.8);
+    font-size: .9rem;
+}
+
+.urwa-welcome .arabic {
+    color: var(--gold-light);
+    font-family: Georgia, serif;
+    font-size: 1.7rem;
+    direction: rtl;
+}
+
+/* ---------- STAT CARDS ---------- */
+
+.urwa-stat {
+    min-height: 125px;
+    padding: 19px;
+    border-radius: var(--radius);
+    background: var(--white);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+}
+
+.urwa-stat-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.urwa-stat-icon {
+    width: 39px;
+    height: 39px;
+    display: grid;
+    place-items: center;
+    border-radius: 11px;
+    background: var(--green-soft);
+    color: var(--green);
+    font-size: 1.15rem;
+}
+
+.urwa-stat-label {
+    display: block;
+    color: var(--muted);
+    font-size: .8rem;
+    margin-top: 11px;
+}
+
+.urwa-stat-value {
+    display: block;
+    color: var(--ink);
+    font-size: 1.65rem;
+    font-weight: 800;
+    line-height: 1.3;
+}
+
+.urwa-stat-note {
+    color: var(--muted);
+    font-size: .72rem;
+    margin-top: 4px;
+}
+
+.urwa-stat.green {
+    background: #e0f8eb;
+    border-color: #d1f1df;
+}
+
+.urwa-stat.red {
+    background: #fde7e8;
+    border-color: #f8d9db;
+}
+
+.urwa-stat.yellow {
+    background: #fff8e7;
+    border-color: #f7edcf;
+}
+
+.urwa-stat.blue {
+    background: #e8f0ff;
+    border-color: #dce7ff;
+}
+
+/* ---------- TABLES ---------- */
+
+.urwa-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--white);
+}
+
+.urwa-table {
+    width: 100%;
+    min-width: 650px;
+    border-collapse: collapse;
+}
+
+.urwa-table th {
+    padding: 13px 15px;
+    text-align: left;
+    color: #687080;
+    background: #fbfaf7;
+    font-size: .76rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.urwa-table td {
+    padding: 14px 15px;
+    border-top: 1px solid var(--line);
+    color: var(--ink);
+    font-size: .82rem;
+}
+
+.urwa-table tbody tr:hover {
+    background: #fbfaf7;
+}
+
+/* ---------- BADGES ---------- */
+
+.urwa-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 9px;
+    border-radius: 30px;
+    font-size: .7rem;
+    font-weight: 750;
+    white-space: nowrap;
+}
+
+.urwa-badge.success {
+    color: #167346;
+    background: #e2f6e9;
+}
+
+.urwa-badge.pending {
+    color: #9b7b37;
+    background: #fff3d5;
+}
+
+.urwa-badge.danger {
+    color: #b5333b;
+    background: #fde8e9;
+}
+
+.urwa-badge.info {
+    color: #315caa;
+    background: #e8efff;
+}
+
+.urwa-badge.neutral {
+    color: #687080;
+    background: #f1eadc;
+}
+
+/* ---------- PROGRESS ---------- */
+
+.urwa-progress {
+    height: 9px;
+    overflow: hidden;
+    border-radius: 30px;
+    background: #e8e5de;
+}
+
+.urwa-progress-fill {
+    height: 100%;
+    border-radius: inherit;
+    background: var(--green);
+}
+
+.urwa-progress-fill.gold {
+    background: var(--gold);
+}
+
+.urwa-progress-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 8px;
+    font-size: .82rem;
+}
+
+/* ---------- STUDENT LEARNING TIMELINE ---------- */
+
+.urwa-learning-track {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    overflow-x: auto;
+    padding: 24px 5px 15px;
+}
+
+.urwa-learning-step {
+    min-width: 105px;
+    flex: 1;
+    position: relative;
+    text-align: center;
+}
+
+.urwa-learning-step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    height: 4px;
+    top: 17px;
+    left: 50%;
+    width: 100%;
+    background: #d8e7df;
+    z-index: 0;
+}
+
+.urwa-learning-step.completed:not(:last-child)::after {
+    background: var(--green);
+}
+
+.urwa-step-circle {
+    width: 36px;
+    height: 36px;
+    margin: 0 auto 9px;
+    display: grid;
+    place-items: center;
+    position: relative;
+    z-index: 1;
+    border-radius: 50%;
+    color: var(--white);
+    background: #cbd5d0;
+    font-weight: 800;
+}
+
+.urwa-learning-step.completed .urwa-step-circle {
+    background: var(--green);
+    box-shadow: 0 3px 12px rgba(22,163,122,.2);
+}
+
+.urwa-learning-step.current .urwa-step-circle {
+    background: var(--gold);
+    color: var(--green-dark);
+}
+
+.urwa-step-name {
+    color: var(--muted);
+    font-size: .76rem;
+    font-weight: 600;
+}
+
+/* ---------- OBJECTIVES / MILESTONES ---------- */
+
+.urwa-objectives {
+    overflow: hidden;
+}
+
+.urwa-objective-track {
+    display: flex;
+    gap: 18px;
+    overflow-x: auto;
+    padding: 20px 4px 12px;
+}
+
+.urwa-objective {
+    min-width: 175px;
+    flex: 1;
+    text-align: center;
+    position: relative;
+}
+
+.urwa-objective::before {
+    content: "";
+    height: 4px;
+    background: #d8e7df;
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    width: 100%;
+}
+
+.urwa-objective:last-child::before {
+    display: none;
+}
+
+.urwa-objective-star {
+    position: relative;
+    z-index: 1;
+    width: 43px;
+    height: 43px;
+    display: grid;
+    place-items: center;
+    margin: 0 auto 10px;
+    border-radius: 50%;
+    background: var(--gold);
+    color: var(--white);
+    font-size: 1.3rem;
+}
+
+.urwa-objective h4 {
+    font-size: .82rem;
+    margin-bottom: 6px;
+}
+
+.urwa-objective p {
+    color: var(--muted);
+    font-size: .72rem;
+}
+
+.urwa-feedback {
+    margin-top: 10px;
+    padding: 9px;
+    border-left: 3px solid var(--gold);
+    border-radius: 7px;
+    background: #e8dcc8;
+    text-align: left;
+    color: var(--muted);
+    font-size: .72rem;
+}
+
+/* ---------- ATTENDANCE ---------- */
+
+.urwa-attendance-date {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 16px;
+    margin-bottom: 20px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--white);
+}
+
+.urwa-date-label {
+    color: var(--muted);
+    font-size: .75rem;
+}
+
+.urwa-date-value {
+    color: var(--green);
+    font-weight: 750;
+}
+
+.urwa-attendance-card {
+    padding: 18px;
+    text-align: center;
+    border-radius: 14px;
+    background: var(--green-soft);
+}
+
+.urwa-attendance-card strong {
+    display: block;
+    font-size: 1.7rem;
+    color: var(--green);
+}
+
+.urwa-attendance-card span {
+    color: var(--muted);
+    font-size: .78rem;
+}
+
+/* ---------- ASSIGNMENTS / LISTS ---------- */
+
+.urwa-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.urwa-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.urwa-list-item:last-child {
+    border-bottom: 0;
+}
+
+.urwa-list-item h4 {
+    color: var(--ink);
+    font-size: .87rem;
+}
+
+.urwa-list-item p {
+    color: var(--muted);
+    font-size: .76rem;
+    margin-top: 3px;
+}
+
+/* ---------- FORMS ---------- */
+
+.urwa-form-group {
+    margin-bottom: 16px;
+}
+
+.urwa-form-group label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--ink);
+    font-size: .82rem;
+    font-weight: 700;
+}
+
+.urwa-form-group input,
+.urwa-form-group select,
+.urwa-form-group textarea {
+    width: 100%;
+    min-height: 43px;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    background: var(--white);
+    outline: none;
+    color: var(--ink);
+}
+
+.urwa-form-group textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+
+.urwa-form-group input:focus,
+.urwa-form-group select:focus,
+.urwa-form-group textarea:focus {
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(14,74,64,.08);
+}
+
+.urwa-form-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 15px;
+}
+
+/* ---------- ATTENDANCE HEATMAP ---------- */
+
+.urwa-heatmap {
+    display: grid;
+    grid-template-columns: 100px repeat(6, minmax(25px, 1fr));
+    gap: 8px;
+    align-items: center;
+    font-size: .76rem;
+}
+
+.urwa-heatmap-label {
+    color: var(--muted);
+}
+
+.urwa-heat {
+    height: 24px;
+    border-radius: 6px;
+    background: #d8e7df;
+}
+
+.urwa-heat.present {
+    background: #e8dcc8;
+}
+
+.urwa-heat.late {
+    background: var(--gold);
+}
+
+.urwa-heat.absent {
+    background: #e99b91;
+}
+
+/* ---------- EMPTY STATE ---------- */
+
+.urwa-empty {
+    padding: 35px 18px;
+    text-align: center;
+    border: 1px dashed #d7e0da;
+    border-radius: 12px;
+    color: var(--muted);
+}
+
+.urwa-empty strong {
+    display: block;
+    color: var(--green);
+    margin-bottom: 5px;
+}
+
+/* ---------- RESPONSIVE ---------- */
+
+@media (max-width: 1150px) {
+    .urwa-grid-5 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .urwa-grid-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 850px) {
+    :root {
+        --sidebar-width: 0px;
+    }
+
+    .urwa-sidebar {
+        width: 260px;
+        transform: translateX(-100%);
+        transition: transform .25s ease;
+        box-shadow: var(--shadow);
+    }
+
+    .urwa-sidebar.open {
+        transform: translateX(0);
+    }
+
+    .urwa-main {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .urwa-menu-button {
+        display: inline-grid;
+        place-items: center;
+    }
+
+    .urwa-topbar {
+        padding: 12px 18px;
+    }
+
+    .urwa-content {
+        padding: 22px 18px;
+    }
+
+    .urwa-search {
+        display: none;
+    }
+}
+
+@media (max-width: 600px) {
+    .urwa-grid-2,
+    .urwa-grid-3,
+    .urwa-grid-4,
+    .urwa-grid-5 {
+        grid-template-columns: 1fr;
+    }
+
+    .urwa-content {
+        padding: 17px 13px;
+    }
+
+    .urwa-topbar {
+        min-height: 65px;
+    }
+
+    .urwa-topbar-title {
+        font-size: .95rem;
+    }
+
+    .urwa-user-name,
+    .urwa-user-role {
+        display: none;
+    }
+
+    .urwa-welcome {
+        padding: 22px;
+        align-items: flex-start;
+    }
+
+    .urwa-welcome .arabic {
+        display: none;
+    }
+
+    .urwa-welcome h2 {
+        font-size: 1.25rem;
+    }
+
+    .urwa-form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .urwa-attendance-date {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .urwa-learning-step {
+        min-width: 85px;
+    }
+
+    .urwa-objective {
+        min-width: 150px;
+    }
+}

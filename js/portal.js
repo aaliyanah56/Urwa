@@ -1,0 +1,1 @@
+(() => {document.querySelectorAll(".js-portal-demo").forEach(form=>form.addEventListener("submit",event=>{event.preventDefault();const destination=form.dataset.destination;if(destination){const ok=window.confirm("This is a demonstration only. No account has been authenticated. Open the dashboard preview?");if(ok)window.location.href=destination;}}));})();

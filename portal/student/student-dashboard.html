@@ -1,0 +1,253 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard | URWA</title>
+    <link rel="stylesheet" href="../../css/portal.css">
+    <link rel="stylesheet" href="../../css/dashboard-live.css">
+</head>
+<body data-urwa-role="student">
+<div class="urwa-app">
+    <div class="urwa-layout">
+
+        <aside class="urwa-sidebar" id="sidebar">
+            <div class="urwa-brand">
+                <img src="../../assets/logo.jpg" alt="URWA Logo">
+                <div>
+                    <div class="urwa-brand-name">URWA</div>
+                    <div class="urwa-brand-tagline">THE FIRMEST HANDHOLD</div>
+                </div>
+            </div>
+
+            <div class="urwa-profile">
+                <div class="urwa-avatar">S</div>
+                <div>
+                    <strong data-profile-name>Student Name</strong>
+                    <span>Student</span>
+                </div>
+            </div>
+
+            <nav class="urwa-nav">
+                <div class="urwa-nav-label">Learning</div>
+                <a href="#dashboard" class="active"><span class="urwa-nav-icon">▦</span>Dashboard</a>
+                <a href="#program"><span class="urwa-nav-icon">◇</span>My Programme</a>
+                <a href="#progress"><span class="urwa-nav-icon">▥</span>My Progress</a>
+                <a href="#quran"><span class="urwa-nav-icon">▤</span>Qur'an Reader</a>
+                <a href="#homework"><span class="urwa-nav-icon">▣</span>My Homework</a>
+                <a href="#sessions"><span class="urwa-nav-icon">▦</span>Book a Session</a>
+                <a href="#halaqa"><span class="urwa-nav-icon">◎</span>My Halaqa</a>
+
+                <div class="urwa-nav-label">Account</div>
+                <a href="#profile"><span class="urwa-nav-icon">♙</span>My Profile</a>
+                <a href="#profile"><span class="urwa-nav-icon">⚙</span>Settings</a>
+            </nav>
+
+            <div class="urwa-sidebar-bottom">
+                <a href="index.html"><span>⌂</span> Portal Home</a>
+                <a href="student-login.html" data-urwa-logout><span>⇥</span> Logout</a>
+            </div>
+        </aside>
+
+        <main class="urwa-main">
+            <header class="urwa-topbar">
+                <div class="urwa-topbar-left">
+                    <button class="urwa-menu-button" onclick="toggleSidebar()">☰</button>
+                    <div>
+                        <div class="urwa-topbar-title">My Learning Space</div>
+                        <div class="urwa-user-role">URWA Student Portal</div>
+                    </div>
+                </div>
+
+                <div class="urwa-topbar-right">
+                    <button class="urwa-icon-button" aria-label="Notifications">♧</button>
+                    <div class="urwa-user">
+                        <div class="urwa-avatar">S</div>
+                        <div>
+                            <div class="urwa-user-name" data-profile-name>Student Name</div>
+                            <div class="urwa-user-role">Student</div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="urwa-content" id="dashboard">
+                <section class="urwa-card urwa-live-status" id="student-live-overview" aria-live="polite"><strong>Loading your learning records…</strong><p>Your programme, halaqa and progress will appear here.</p></section>
+                <section class="urwa-welcome">
+                    <div>
+                        <h2>Assalaamu alaykum, <span data-profile-name>Student Name</span></h2>
+                        <p>Welcome to your URWA learning space. Keep learning, revising and growing.</p>
+                    </div>
+                    <div class="arabic">وَقُل رَّبِّ زِدْنِي عِلْمًا</div>
+                </section>
+
+                <div class="urwa-grid urwa-grid-4">
+                    <article class="urwa-stat">
+                        <div class="urwa-stat-top"><span class="urwa-stat-icon">▤</span><span class="urwa-badge success">Learning</span></div>
+                        <span class="urwa-stat-label">Current Programme</span>
+                        <strong class="urwa-stat-value" style="font-size:1.1rem">Qur'an</strong>
+                        <div class="urwa-stat-note">Your assigned programme</div>
+                    </article>
+                    <article class="urwa-stat">
+                        <div class="urwa-stat-top"><span class="urwa-stat-icon">◎</span></div>
+                        <span class="urwa-stat-label">My Halaqa</span>
+                        <strong class="urwa-stat-value" style="font-size:1.1rem">Awaiting assignment</strong>
+                        <div class="urwa-stat-note">Your assigned learning group</div>
+                    </article>
+                    <article class="urwa-stat">
+                        <div class="urwa-stat-top"><span class="urwa-stat-icon">✓</span></div>
+                        <span class="urwa-stat-label">Attendance</span>
+                        <strong class="urwa-stat-value">—</strong>
+                        <div class="urwa-stat-note">Attendance summary</div>
+                    </article>
+                    <article class="urwa-stat">
+                        <div class="urwa-stat-top"><span class="urwa-stat-icon">▣</span></div>
+                        <span class="urwa-stat-label">Pending Homework</span>
+                        <strong class="urwa-stat-value">—</strong>
+                        <div class="urwa-stat-note">Assignments to complete</div>
+                    </article>
+                </div>
+
+                <section id="progress">
+                    <h3 class="urwa-section-title">My Learning Journey</h3>
+                    <div class="urwa-card">
+                        <div class="urwa-card-header">
+                            <div>
+                                <h3 class="urwa-card-title">Learning Progress</h3>
+                                <p class="urwa-card-subtitle">Follow your learning milestones and achievements</p>
+                            </div>
+                            <span class="urwa-badge info">Progress overview</span>
+                        </div>
+
+                        <div class="urwa-progress-row">
+                            <strong>Overall progress</strong>
+                            <span>Updated by your Abla</span>
+                        </div>
+                        <div class="urwa-progress">
+                            <div class="urwa-progress-fill" style="width:0%"></div>
+                        </div>
+
+                        <div class="urwa-learning-track">
+                            <div class="urwa-learning-step completed">
+                                <div class="urwa-step-circle">✓</div>
+                                <div class="urwa-step-name">Foundation</div>
+                            </div>
+                            <div class="urwa-learning-step current">
+                                <div class="urwa-step-circle">2</div>
+                                <div class="urwa-step-name">Current Level</div>
+                            </div>
+                            <div class="urwa-learning-step">
+                                <div class="urwa-step-circle">3</div>
+                                <div class="urwa-step-name">Next Level</div>
+                            </div>
+                            <div class="urwa-learning-step">
+                                <div class="urwa-step-circle">4</div>
+                                <div class="urwa-step-name">Completion</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="program">
+                    <h3 class="urwa-section-title">My Programme</h3>
+                    <div class="urwa-grid urwa-grid-2">
+                        <article class="urwa-card">
+                            <div class="urwa-card-header">
+                                <div>
+                                    <h3 class="urwa-card-title">My Current Learning</h3>
+                                    <p class="urwa-card-subtitle">Your programme and learning level</p>
+                                </div>
+                                <span class="urwa-badge success">Assigned</span>
+                            </div>
+                            <p><strong>Programme:</strong> To be confirmed</p>
+                            <p><strong>Level:</strong> To be confirmed</p>
+                            <p><strong>Abla:</strong> Awaiting assignment</p>
+                            <p><strong>Halaqa:</strong> Awaiting assignment</p>
+                        </article>
+
+                        <article class="urwa-card" id="halaqa">
+                            <div class="urwa-card-header">
+                                <h3 class="urwa-card-title">My Halaqa</h3>
+                                <span class="urwa-badge pending">Awaiting assignment</span>
+                            </div>
+                            <p class="urwa-card-subtitle">Your halaqa details and class information will appear here after admission and allocation.</p>
+                        </article>
+                    </div>
+                </section>
+
+                <section id="homework">
+                    <h3 class="urwa-section-title">My Homework & Assignments</h3>
+                    <div class="urwa-card">
+                        <div class="urwa-card-header">
+                            <div>
+                                <h3 class="urwa-card-title">Assignments from your Abla</h3>
+                                <p class="urwa-card-subtitle">Complete your work and submit it for review</p>
+                            </div>
+                            <span class="urwa-badge info">My work</span>
+                        </div>
+                        <div class="urwa-empty" id="student-assignments-list">
+                            <strong>No assignments to display</strong>
+                            Your Abla's assignments will appear here.
+                        </div>
+                    </div>
+                </section>
+
+                <section id="sessions">
+                    <h3 class="urwa-section-title">My Class Schedule</h3>
+                    <div class="urwa-card">
+                        <div class="urwa-empty">
+                            <strong>Your timetable will appear here</strong>
+                            Your assigned class days and session times will be displayed here.
+                        </div>
+                    </div>
+                </section>
+
+                <section id="quran">
+                    <h3 class="urwa-section-title">Qur'an Learning</h3>
+                    <div class="urwa-card">
+                        <div class="urwa-card-header">
+                            <h3 class="urwa-card-title">My Hifdh & Muraja'ah</h3>
+                            <span class="urwa-badge info">Teacher updated</span>
+                        </div>
+                        <div class="urwa-grid urwa-grid-2">
+                            <div>
+                                <p class="urwa-card-subtitle">Hifdh progress</p>
+                                <h2 class="urwa-stat-value">—</h2>
+                                <p class="urwa-card-subtitle">Your memorisation record</p>
+                            </div>
+                            <div>
+                                <p class="urwa-card-subtitle">Muraja'ah progress</p>
+                                <h2 class="urwa-stat-value">—</h2>
+                                <p class="urwa-card-subtitle">Your revision record</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="profile">
+                    <h3 class="urwa-section-title">My Profile</h3>
+                    <div class="urwa-card">
+                        <p><strong>Name:</strong> Student Name</p>
+                        <p><strong>Email:</strong> Student email</p>
+                        <p><strong>Account:</strong> Student</p>
+                    </div>
+                </section>
+
+                <footer style="padding:30px 0;text-align:center;color:#687080;font-size:.8rem">
+                    URWA — The Firmest Handhold
+                </footer>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script>
+function toggleSidebar() {
+    document.getElementById("sidebar").classList.toggle("open");
+}
+</script>
+<script type="module" src="../../js/firebase-auth.js"></script>
+<script type="module" src="../../js/dashboard-data.js"></script>
+</body>
+</html>

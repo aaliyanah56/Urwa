@@ -1,0 +1,314 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abla Dashboard | URWA</title>
+    <link rel="stylesheet" href="../../css/portal.css">
+    <link rel="stylesheet" href="../../css/dashboard-live.css">
+</head>
+<body data-urwa-role="teacher">
+<div class="urwa-app">
+    <div class="urwa-layout">
+
+        <aside class="urwa-sidebar" id="sidebar">
+            <div class="urwa-brand">
+                <img src="../../assets/logo.jpg" alt="URWA Logo">
+                <div>
+                    <div class="urwa-brand-name">URWA</div>
+                    <div class="urwa-brand-tagline">ABLA PORTAL</div>
+                </div>
+            </div>
+
+            <div class="urwa-profile">
+                <div class="urwa-avatar">A</div>
+                <div>
+                    <strong data-profile-name>Abla Name</strong>
+                    <span>Qur'an Teacher</span>
+                </div>
+            </div>
+
+            <nav class="urwa-nav">
+                <div class="urwa-nav-label">Teaching</div>
+                <a href="#overview" class="active"><span class="urwa-nav-icon">▦</span>Dashboard</a>
+                <a href="#halaqa"><span class="urwa-nav-icon">◎</span>My Halaqa</a>
+                <a href="#students"><span class="urwa-nav-icon">♙</span>My Students</a>
+                <a href="#attendance"><span class="urwa-nav-icon">✓</span>Track Attendance</a>
+                <a href="#assignments"><span class="urwa-nav-icon">▣</span>Assignments</a>
+                <a href="#submissions"><span class="urwa-nav-icon">⇧</span>Student Submissions</a>
+                <a href="#progress"><span class="urwa-nav-icon">▥</span>Hifdh & Muraja'ah</a>
+                <a href="#timetable"><span class="urwa-nav-icon">▦</span>Class Timetable</a>
+
+                <div class="urwa-nav-label">Communication</div>
+                <a href="#announcements"><span class="urwa-nav-icon">♧</span>Announcements</a>
+                <a href="#profile"><span class="urwa-nav-icon">♙</span>My Profile</a>
+            </nav>
+
+            <div class="urwa-sidebar-bottom">
+                <a href="index.html"><span>⌂</span> Portal Home</a>
+                <a href="teacher-login.html" data-urwa-logout><span>⇥</span> Logout</a>
+            </div>
+        </aside>
+
+        <main class="urwa-main">
+            <header class="urwa-topbar">
+                <div class="urwa-topbar-left">
+                    <button class="urwa-menu-button" onclick="toggleSidebar()">☰</button>
+                    <div>
+                        <div class="urwa-topbar-title">Abla Teaching Space</div>
+                        <div class="urwa-user-role">URWA Teacher Portal</div>
+                    </div>
+                </div>
+
+                <div class="urwa-topbar-right">
+                    <button class="urwa-icon-button" aria-label="Notifications">♧</button>
+                    <div class="urwa-user">
+                        <div class="urwa-avatar">A</div>
+                        <div>
+                            <div class="urwa-user-name" data-profile-name>Abla Name</div>
+                            <div class="urwa-user-role">Teacher</div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="urwa-content" id="overview">
+                <section class="urwa-card urwa-live-status" id="teacher-live-overview" aria-live="polite"><strong>Loading your teaching records…</strong><p>Your halaqas and students will appear here.</p></section>
+                <div class="urwa-page-heading">
+                    <h1>Assalaamu alaykum, Abla</h1>
+                    <p>Manage your halaqa, guide your students and follow their learning progress.</p>
+                </div>
+
+                <section class="urwa-welcome">
+                    <div>
+                        <h2>Your Halaqa, Your Amanah</h2>
+                        <p>May Allah place barakah in your teaching and in the knowledge you share.</p>
+                    </div>
+                    <div class="arabic">رَبِّ زِدْنِي عِلْمًا</div>
+                </section>
+
+                <div class="urwa-grid urwa-grid-4">
+                    <article class="urwa-stat green">
+                        <div class="urwa-stat-top"><span class="urwa-stat-icon">♙</span></div>
+                        <span class="urwa-stat-label">My Students</span>
+                        <strong class="urwa-stat-value">—</strong>
+                        <div class="urwa-stat-note">Students assigned to your halaqa</div>
+                    </article>
+                    <article class="urwa-stat">
+                        <div class="urwa-stat-top"><span class="urwa-stat-icon">✓</span></div>
+                        <span class="urwa-stat-label">Attendance Submitted</span>
+                        <strong class="urwa-stat-value">—</strong>
+                        <div class="urwa-stat-note">Attendance records</div>
+                    </article>
+                    <article class="urwa-stat yellow">
+                        <div class="urwa-stat-top"><span class="urwa-stat-icon">▣</span></div>
+                        <span class="urwa-stat-label">Active Assignments</span>
+                        <strong class="urwa-stat-value">—</strong>
+                        <div class="urwa-stat-note">Assignments you have created</div>
+                    </article>
+                    <article class="urwa-stat blue">
+                        <div class="urwa-stat-top"><span class="urwa-stat-icon">⇧</span></div>
+                        <span class="urwa-stat-label">Pending Reviews</span>
+                        <strong class="urwa-stat-value">—</strong>
+                        <div class="urwa-stat-note">Student work awaiting feedback</div>
+                    </article>
+                </div>
+
+                <section id="halaqa">
+                    <h3 class="urwa-section-title">My Halaqa</h3>
+                    <div class="urwa-grid urwa-grid-2">
+                        <article class="urwa-card">
+                            <div class="urwa-card-header">
+                                <h3 class="urwa-card-title">Halaqa Information</h3>
+                                <span class="urwa-badge success">Assigned halaqa</span>
+                            </div>
+                            <p><strong>Halaqa:</strong> To be assigned</p>
+                            <p><strong>Programme:</strong> To be assigned</p>
+                            <p><strong>Session:</strong> To be confirmed</p>
+                            <p><strong>Students:</strong> To be populated</p>
+                        </article>
+                        <article class="urwa-card">
+                            <h3 class="urwa-card-title">Teaching Reminder</h3>
+                            <p class="urwa-card-subtitle">Keep your halaqa records updated after each class.</p>
+                            <div class="urwa-list">
+                                <div class="urwa-list-item"><span>Record attendance</span><span class="urwa-badge info">After class</span></div>
+                                <div class="urwa-list-item"><span>Update student progress</span><span class="urwa-badge info">Regularly</span></div>
+                                <div class="urwa-list-item"><span>Review submissions</span><span class="urwa-badge info">When received</span></div>
+                            </div>
+                        </article>
+                    </div>
+                </section>
+
+                <section id="attendance">
+                    <h3 class="urwa-section-title">Track Attendance</h3>
+                    <div class="urwa-card">
+                        <div class="urwa-card-header">
+                            <div>
+                                <h3 class="urwa-card-title">Attendance Overview</h3>
+                                <p class="urwa-card-subtitle">Record attendance for your assigned halaqa</p>
+                            </div>
+                            <span class="urwa-badge info">My halaqa only</span>
+                        </div>
+
+                        <div class="urwa-attendance-date">
+                            <div>
+                                <div class="urwa-date-label">Attendance session</div>
+                                <div class="urwa-date-value">Select your class date</div>
+                            </div>
+                            <input id="teacher-attendance-date" type="date" aria-label="Class date">
+                        </div>
+
+                        <div class="urwa-grid urwa-grid-4">
+                            <div class="urwa-attendance-card"><strong>—</strong><span>Present</span></div>
+                            <div class="urwa-attendance-card" style="background:#fff8e7"><strong>—</strong><span>Late</span></div>
+                            <div class="urwa-attendance-card" style="background:#fdebec"><strong>—</strong><span>Absent</span></div>
+                            <div class="urwa-attendance-card" style="background:#eaf0ff"><strong>—</strong><span>Excused</span></div>
+                        </div>
+
+                        <div style="margin-top:20px" class="urwa-empty" id="teacher-attendance-roster">
+                            <strong>Your assigned students will appear here</strong>
+                            Mark each student's attendance once the halaqa list is loaded.
+                        </div>
+                    </div>
+                </section>
+
+                <section id="students">
+                    <h3 class="urwa-section-title">My Students</h3>
+                    <div class="urwa-card">
+                        <div class="urwa-card-header">
+                            <h3 class="urwa-card-title">Students in Your Halaqa</h3>
+                            <span class="urwa-badge info">Private class list</span>
+                        </div>
+                        <div class="urwa-table-wrap">
+                            <table class="urwa-table">
+                                <thead>
+                                    <tr><th>Student</th><th>Programme</th><th>Attendance</th><th>Progress</th><th>Status</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td colspan="5">Student records will appear here after Firebase is connected.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="assignments">
+                    <h3 class="urwa-section-title">Create an Assignment</h3>
+                    <div class="urwa-card">
+                        <div class="urwa-card-header">
+                            <div>
+                                <h3 class="urwa-card-title">Assign Work to Your Students</h3>
+                                <p class="urwa-card-subtitle">Students will see your instructions in their portal.</p>
+                            </div>
+                        </div>
+                        <form id="teacher-assignment-form">
+                            <div class="urwa-form-row">
+                                <div class="urwa-form-group">
+                                    <label for="assignment-title">Assignment title</label>
+                                    <input id="assignment-title" type="text" placeholder="Enter assignment title">
+                                </div>
+                                <div class="urwa-form-group">
+                                    <label for="assignment-type">Assignment type</label>
+                                    <select id="assignment-type">
+                                        <option>Hifdh</option>
+                                        <option>Muraja'ah</option>
+                                        <option>Tajweed</option>
+                                        <option>Tafseer</option>
+                                        <option>Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="urwa-form-row">
+                                <div class="urwa-form-group">
+                                    <label for="assignment-due">Due date</label>
+                                    <input id="assignment-due" type="date">
+                                </div>
+                                <div class="urwa-form-group">
+                                    <label for="assignment-students">Assign to</label>
+                                    <select id="assignment-students">
+                                        <option>All students in my halaqa</option>
+                                        <option>Selected students</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="urwa-form-group">
+                                <label for="assignment-instructions">Instructions</label>
+                                <textarea id="assignment-instructions" placeholder="Write the work students should complete..."></textarea>
+                            </div>
+                            <button class="urwa-btn urwa-btn-primary" type="submit">Create Assignment</button>
+                        <p id="teacher-assignment-message" role="status" aria-live="polite"></p>
+</form>
+                    </div>
+                </section>
+
+                <section id="submissions">
+                    <h3 class="urwa-section-title">Student Submissions</h3>
+                    <div class="urwa-card">
+                        <div class="urwa-card-header">
+                            <h3 class="urwa-card-title">Review Student Work</h3>
+                            <span class="urwa-badge pending">Awaiting review</span>
+                        </div>
+                        <div class="urwa-empty">
+                            <strong>No submissions to display</strong>
+                            Student submissions will appear here for your review and feedback.
+                        </div>
+                    </div>
+                </section>
+
+                <section id="progress">
+                    <h3 class="urwa-section-title">Hifdh & Muraja'ah Progress</h3>
+                    <div class="urwa-card">
+                        <div class="urwa-empty">
+                            <strong>Student progress records</strong>
+                            Record memorisation, revision, assessments and feedback for your halaqa students.
+                        </div>
+                    </div>
+                </section>
+
+                <section id="timetable">
+                    <h3 class="urwa-section-title">Class Timetable</h3>
+                    <div class="urwa-card">
+                        <div class="urwa-empty">
+                            <strong>Your timetable will appear here</strong>
+                            Your assigned class schedule will be displayed here.
+                        </div>
+                    </div>
+                </section>
+
+                <section id="announcements">
+                    <h3 class="urwa-section-title">Announcements</h3>
+                    <div class="urwa-card">
+                        <div class="urwa-empty">
+                            <strong>No announcements yet</strong>
+                            URWA announcements relevant to your teaching role will appear here.
+                        </div>
+                    </div>
+                </section>
+
+                <section id="profile">
+                    <h3 class="urwa-section-title">My Profile</h3>
+                    <div class="urwa-card">
+                        <p><strong>Name:</strong> Abla Name</p>
+                        <p><strong>Role:</strong> Approved Teacher</p>
+                        <p><strong>Halaqa:</strong> To be assigned</p>
+                    </div>
+                </section>
+
+                <footer style="padding:30px 0;text-align:center;color:#687080;font-size:.8rem">
+                    URWA — The Firmest Handhold
+                </footer>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script>
+function toggleSidebar() {
+    document.getElementById("sidebar").classList.toggle("open");
+}
+</script>
+<script type="module" src="../../js/firebase-auth.js"></script>
+<script type="module" src="../../js/dashboard-data.js"></script>
+</body>
+</html>

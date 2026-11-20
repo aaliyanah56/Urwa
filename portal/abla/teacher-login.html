@@ -1,0 +1,180 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Welcome back, Abla. | URWA</title>
+
+    <link rel="stylesheet" href="../../css/portal.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Amiri&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="sys-header">
+
+        <a class="sys-brand" href="../../index.html">
+            <img src="../../assets/logo.jpg" alt="URWA logo">
+
+            <span>
+                URWA
+                <small>THE FIRMEST HANDHOLD</small>
+            </span>
+        </a>
+
+        <a href="../../index.html">← Back to website</a>
+
+    </header>
+
+
+    <!-- Main Login Area -->
+    <main class="sys-login-wrap">
+
+        <div class="sys-login-card">
+
+            <!-- Introduction Panel -->
+            <section class="sys-login-intro">
+
+                <div class="sys-eyebrow">
+                    URWA TEACHER SPACE
+                </div>
+
+                <h1>Welcome back, Abla.</h1>
+
+                <p>
+                    Sign in to manage your assigned halaqa, guide your
+                    students and review their learning submissions.
+                </p>
+
+                <div
+                    style="font:30px 'Amiri',serif;color:#c6a75e;margin-top:20px"
+                    lang="ar"
+                    dir="rtl"
+                >
+                    وَقُل رَّبِّ زِدْنِي عِلْمًا
+                </div>
+
+            </section>
+
+
+            <!-- Login Form Panel -->
+            <section class="sys-login-form">
+
+                <h2>Sign in</h2>
+
+                <p class="sys-muted">
+                    Use the account issued or approved by URWA administration.
+                </p>
+
+                <form data-staff-login="teacher">
+
+                    <!-- Email -->
+                    <div class="sys-field">
+
+                        <label for="email">
+                            Email address
+                        </label>
+
+                        <input
+                            id="email"
+                            name="email"
+                            type="email"
+                            autocomplete="username"
+                            required
+                            placeholder="name@example.com"
+                        >
+
+                    </div>
+
+
+                    <!-- Password -->
+                    <div class="sys-field">
+
+                        <label for="password">
+                            Password
+                        </label>
+
+                        <div style="display:flex;gap:7px">
+
+                            <input
+                                style="flex:1"
+                                id="password"
+                                name="password"
+                                type="password"
+                                autocomplete="current-password"
+                                required
+                                placeholder="Enter your password"
+                            >
+
+                            <button
+                                class="sys-btn light small"
+                                type="button"
+                                data-toggle-password="password"
+                                aria-controls="password"
+                            >
+                                Show
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Submit -->
+                    <button class="sys-btn" type="submit">
+                        Sign in to Teacher portal
+                    </button>
+
+                    <p
+                        class="sys-notice sys-hidden"
+                        data-form-message
+                        role="status"
+                        aria-live="polite"
+                    ></p>
+
+                </form>
+
+
+                <!-- Helpful Links -->
+                <div class="sys-login-links">
+
+                    <a href="../../become-teacher.html">
+                        Teacher application information
+                    </a>
+
+                    <a href="../../contact.html">
+                        Need help?
+                    </a>
+
+                </div>
+
+
+                <!-- Preview Notice -->
+                <p class="sys-muted" style="margin-top:22px">
+                    Use the teacher account issued and approved by URWA administration.
+                </p>
+
+            </section>
+
+        </div>
+
+    </main>
+
+
+    <!-- Footer -->
+    <footer class="sys-footer">
+        © <span data-year></span> Urwatul Wuthqaa · The Firmest Handhold
+    </footer>
+
+
+    <!-- JavaScript -->
+    <script type="module" src="../../js/firebase-auth.js"></script>
+
+</body>
+</html>

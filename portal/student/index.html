@@ -1,0 +1,624 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Student Portal | URWA – Urwatul Wuthqaa</title>
+
+  <meta
+    name="description"
+    content="Welcome to the URWA Student Portal. Access your Qur'an learning journey, classes and educational resources."
+  >
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../../css/dashboard.css">
+
+  <style>
+    :root {
+      --emerald: #1f2a44;
+      --emerald-dark: #151e32;
+      --gold: #c6a75e;
+      --cream: #fbfaf7;
+      --mint: #e8dcc8;
+      --text: #17191e;
+      --muted: #687080;
+      --white: #ffffff;
+      --line: #e8e5de;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--cream);
+      color: var(--text);
+      font-family: "DM Sans", sans-serif;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    /* HEADER */
+
+    .student-header {
+      background: var(--white);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .header-inner {
+      width: min(1180px, 90%);
+      min-height: 82px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--emerald);
+    }
+
+    .brand img {
+      width: 52px;
+      height: 52px;
+      object-fit: contain;
+    }
+
+    .brand b {
+      display: block;
+      font-size: 1.35rem;
+      letter-spacing: 2px;
+    }
+
+    .brand small {
+      display: block;
+      font-size: .65rem;
+      letter-spacing: 1.5px;
+      color: var(--muted);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .back-link {
+      color: var(--muted);
+      font-size: .85rem;
+      font-weight: 600;
+    }
+
+    .header-join {
+      background: var(--emerald);
+      color: white;
+      padding: 11px 20px;
+      border-radius: 8px;
+      font-size: .83rem;
+      font-weight: 700;
+    }
+
+    /* HERO */
+
+    .student-hero {
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 85% 20%, rgba(224,165,38,.19), transparent 30%),
+        linear-gradient(120deg, var(--emerald-dark), var(--emerald));
+      color: white;
+    }
+
+    .student-hero::after {
+      content: "";
+      position: absolute;
+      width: 430px;
+      height: 430px;
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 50%;
+      right: -120px;
+      top: -180px;
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      width: min(1180px, 90%);
+      margin: auto;
+      min-height: 350px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 40px;
+      padding: 65px 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-copy {
+      max-width: 650px;
+    }
+
+    .hero-label {
+      color: #c6a75e;
+      font-size: .75rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .hero-copy h1 {
+      font-family: Georgia, serif;
+      font-size: clamp(2.5rem, 5vw, 4.3rem);
+      line-height: 1.12;
+      font-weight: 400;
+      margin: 18px 0;
+    }
+
+    .hero-copy h1 span {
+      color: #c6a75e;
+      font-style: italic;
+    }
+
+    .hero-copy p {
+      max-width: 570px;
+      color: rgba(255,255,255,.78);
+      font-size: .98rem;
+      line-height: 1.85;
+      margin: 0;
+    }
+
+    .hero-arabic {
+      min-width: 230px;
+      text-align: center;
+      color: #c6a75e;
+      font-family: "Amiri", serif;
+      font-size: 2.5rem;
+      line-height: 1.8;
+    }
+
+    .hero-arabic small {
+      display: block;
+      font-family: "DM Sans", sans-serif;
+      font-size: .72rem;
+      color: rgba(255,255,255,.7);
+      letter-spacing: 1px;
+    }
+
+    /* MAIN */
+
+    .student-main {
+      width: min(1180px, 90%);
+      margin: auto;
+      padding: 65px 0 80px;
+    }
+
+    .section-intro {
+      text-align: center;
+      max-width: 650px;
+      margin: 0 auto 38px;
+    }
+
+    .section-intro .eyebrow {
+      color: var(--gold);
+      font-size: .75rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .section-intro h2 {
+      font-family: Georgia, serif;
+      color: var(--emerald);
+      font-size: 2.3rem;
+      font-weight: 400;
+      margin: 12px 0;
+    }
+
+    .section-intro p {
+      color: var(--muted);
+      font-size: .92rem;
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    /* ACCESS CARD */
+
+    .student-access {
+      max-width: 850px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 12px 35px rgba(19, 58, 47, .07);
+    }
+
+    .access-info {
+      padding: 42px;
+      background: var(--mint);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .access-icon {
+      width: 58px;
+      height: 58px;
+      border-radius: 15px;
+      background: var(--emerald);
+      color: white;
+      display: grid;
+      place-items: center;
+      font-size: 1.65rem;
+      margin-bottom: 24px;
+    }
+
+    .access-info h3 {
+      color: var(--emerald);
+      font-family: Georgia, serif;
+      font-size: 1.75rem;
+      font-weight: 400;
+      margin: 0 0 12px;
+    }
+
+    .access-info p {
+      color: #687080;
+      font-size: .9rem;
+      line-height: 1.8;
+      margin: 0;
+    }
+
+    .access-features {
+      padding: 0;
+      margin: 24px 0 0;
+      list-style: none;
+      display: grid;
+      gap: 13px;
+    }
+
+    .access-features li {
+      color: var(--emerald);
+      font-size: .84rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .access-features li span {
+      color: var(--gold);
+      font-weight: 800;
+    }
+
+    .access-action {
+      padding: 42px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .access-action h3 {
+      font-size: 1.3rem;
+      color: var(--emerald);
+      margin: 0 0 10px;
+    }
+
+    .access-action p {
+      color: var(--muted);
+      font-size: .86rem;
+      line-height: 1.7;
+      margin: 0 0 25px;
+    }
+
+    .portal-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 52px;
+      padding: 13px 20px;
+      border-radius: 9px;
+      background: var(--emerald);
+      color: white;
+      font-size: .9rem;
+      font-weight: 700;
+      text-align: center;
+      transition: background .2s, transform .2s;
+    }
+
+    .portal-btn:hover {
+      background: var(--emerald-dark);
+      transform: translateY(-2px);
+    }
+
+    .portal-btn.secondary {
+      margin-top: 12px;
+      color: var(--emerald);
+      background: white;
+      border: 1px solid var(--emerald);
+    }
+
+    .portal-btn.secondary:hover {
+      background: var(--mint);
+    }
+
+    /* SUPPORT */
+
+    .support-box {
+      max-width: 850px;
+      margin: 30px auto 0;
+      padding: 20px 24px;
+      border: 1px solid #e8e5de;
+      border-radius: 12px;
+      background: #fbfaf7;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .support-box h3 {
+      color: var(--emerald);
+      font-size: .95rem;
+      margin: 0 0 5px;
+    }
+
+    .support-box p {
+      color: var(--muted);
+      font-size: .82rem;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .support-box a {
+      color: var(--emerald);
+      font-size: .84rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    /* FOOTER */
+
+    .student-footer {
+      background: var(--emerald-dark);
+      color: rgba(255,255,255,.7);
+      text-align: center;
+      padding: 25px 15px;
+      font-size: .8rem;
+    }
+
+    .student-footer p {
+      margin: 0;
+    }
+
+    /* RESPONSIVE */
+
+    @media (max-width: 800px) {
+      .hero-inner {
+        min-height: auto;
+      }
+
+      .hero-arabic {
+        display: none;
+      }
+    }
+
+    @media (max-width: 650px) {
+      .header-inner {
+        min-height: 72px;
+      }
+
+      .header-join {
+        display: none;
+      }
+
+      .student-main {
+        padding: 45px 0 55px;
+      }
+
+      .student-access {
+        grid-template-columns: 1fr;
+      }
+
+      .access-info,
+      .access-action {
+        padding: 30px 25px;
+      }
+
+      .section-intro h2 {
+        font-size: 1.9rem;
+      }
+
+      .support-box {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .brand img {
+        width: 43px;
+        height: 43px;
+      }
+
+      .brand b {
+        font-size: 1.1rem;
+      }
+
+      .brand small {
+        font-size: .57rem;
+      }
+
+      .back-link {
+        font-size: .75rem;
+      }
+
+      .hero-inner {
+        padding: 50px 0;
+      }
+
+      .hero-copy h1 {
+        font-size: 2.5rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header class="student-header">
+    <div class="header-inner">
+
+      <a class="brand" href="../../index.html">
+        <img src="../../assets/logo.jpg" alt="URWA logo">
+
+        <span>
+          <b>URWA</b>
+          <small>THE FIRMEST HANDHOLD</small>
+        </span>
+      </a>
+
+      <div class="header-right">
+        <a class="header-join" href="../../index.html">Home</a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="student-hero">
+    <div class="hero-inner">
+
+      <div class="hero-copy">
+
+        <div class="hero-label">URWA Learning Community</div>
+
+        <h1>
+          Knowledge begins with
+          <span>a single step.</span>
+        </h1>
+
+        <p>
+          Welcome to your learning space. Continue your journey
+          of Qur'an learning, strengthen your connection with
+          knowledge and grow with the URWA community.
+        </p>
+
+      </div>
+
+      <div class="hero-arabic" lang="ar" dir="rtl">
+        وَقُل رَّبِّ زِدْنِي عِلْمًا
+        <small>SURAH TAHA · 20:114</small>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- STUDENT ACCESS -->
+  <main class="student-main">
+
+    <div class="section-intro">
+
+      <div class="eyebrow">Your learning journey</div>
+
+      <h2>Welcome to the Student Portal</h2>
+
+      <p>
+        Your dedicated space for learning, revision and
+        staying connected with your classes.
+      </p>
+
+    </div>
+
+    <section class="student-access">
+
+      <!-- INFORMATION SIDE -->
+      <div class="access-info">
+
+        <div class="access-icon" aria-hidden="true">✦</div>
+
+        <h3>Your learning, all in one place.</h3>
+
+        <p>
+          Sign in to access your personal student space
+          and stay connected with your URWA learning journey.
+        </p>
+
+        <ul class="access-features">
+          <li><span>✓</span> Access your class information</li>
+          <li><span>✓</span> View assignments and learning resources</li>
+          <li><span>✓</span> Follow your attendance and progress</li>
+          <li><span>✓</span> Stay connected with your teachers</li>
+        </ul>
+
+      </div>
+
+      <!-- LOGIN SIDE -->
+      <div class="access-action">
+
+        <h3>Student Access</h3>
+
+        <p>
+          Already have a URWA student account?
+          Sign in to continue where you left off.
+        </p>
+
+        <a class="portal-btn" href="student-login.html">
+          Sign In to Your Account →
+        </a>
+
+        <a class="portal-btn secondary" href="student-register.html">
+          Create a Student Account
+        </a>
+
+      </div>
+
+    </section>
+
+    <!-- SUPPORT -->
+    <div class="support-box">
+
+      <div>
+        <h3>Need assistance?</h3>
+        <p>
+          Having trouble accessing your account or need help
+          with registration? Our administration team can assist you.
+        </p>
+      </div>
+
+      <a href="../../contact.html">Contact URWA →</a>
+
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="student-footer">
+    <p>
+      © <span id="yr"></span> Urwatul Wuthqaa (URWA).
+      The Firmest Handhold.
+    </p>
+  </footer>
+
+  <script>
+    document.getElementById("yr").textContent =
+      new Date().getFullYear();
+  </script>
+
+</body>
+</html>
