@@ -1,24 +1,285 @@
-import {auth,db} from './firebase.js';
-import {onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
-import {collection,doc,getDoc,getDocs,query,where,orderBy,addDoc,setDoc,updateDoc,serverTimestamp} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
-const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)],esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),date=v=>v?.toDate?v.toDate().toLocaleDateString():v?new Date(v).toLocaleDateString():'—';
-const rows=async name=>{const s=await getDocs(collection(db,name));return s.docs.map(d=>({id:d.id,...d.data()}));};
-const status=(id,title,msg,bad=false)=>{const n=document.getElementById(id);if(n){n.innerHTML='<strong>'+esc(title)+'</strong><p>'+esc(msg)+'</p>';n.classList.toggle('is-error',bad);}};
-async function adminLoad(){
- try{const [people,enroll,halaqas,assignments,attendance]=await Promise.all([rows('users'),rows('studentEnrollments'),rows('halaqas'),rows('teacherAssignments'),rows('attendance')]);const students=people.filter(x=>x.role==='student'),teachers=people.filter(x=>['teacher','abla'].includes(x.role)),byStudent=new Map(enroll.map(x=>[x.studentId,x])),byId=new Map(people.map(x=>[x.id,x])),byH=new Map(halaqas.map(x=>[x.id,x]));const opts=sel=>'<option value="">Choose halaqa</option>'+halaqas.filter(x=>x.isActive!==false).map(x=>'<option value="'+x.id+'" '+(x.id===sel?'selected':'')+'>'+esc(x.name)+'</option>').join('');const pending=students.filter(x=>(byStudent.get(x.id)?.status||x.status)==='pending');
- const put=(id,html,empty)=>{const n=$(id);if(n)n.innerHTML=html||empty;};
- put('#admin-admissions-body',pending.map(x=>{const e=byStudent.get(x.id)||{};return '<tr><td><b>'+esc(x.fullName)+'</b><small>'+esc(x.email)+'</small></td><td>'+esc(e.programme||'—')+'</td><td>'+date(e.createdAt||x.createdAt)+'</td><td>Pending</td><td class="urwa-admin-actions"><select data-admission-halaqa="'+x.id+'">'+opts(e.halaqaId)+'</select><button class="urwa-btn urwa-btn-primary urwa-btn-small" data-accept="'+x.id+'">Accept</button><button class="urwa-btn urwa-btn-outline urwa-btn-small" data-decline="'+x.id+'">Decline</button></td></tr>';}).join(''),' <tr><td colspan="5">No pending student applications.</td></tr>');
- put('#admin-students-body',students.map(x=>{const e=byStudent.get(x.id)||{},h=byH.get(e.halaqaId),ta=assignments.find(z=>z.halaqaId===e.halaqaId),t=ta?byId.get(ta.teacherId):null;return '<tr><td><b>'+esc(x.fullName)+'</b><small>'+esc(x.email)+'</small></td><td>'+esc(e.programme||'—')+'</td><td>'+esc(h?.name||'Not assigned')+'</td><td>'+esc(t?.fullName||'Not assigned')+'</td><td>'+esc(e.status||x.status)+'</td></tr>';}).join(''),' <tr><td colspan="5">No student accounts yet.</td></tr>');
- put('#admin-teachers-body',teachers.map(x=>{const assigned=assignments.filter(z=>z.teacherId===x.id),names=assigned.map(z=>byH.get(z.halaqaId)?.name).filter(Boolean);return '<tr><td><b>'+esc(x.fullName)+'</b><small>'+esc(x.email)+'</small></td><td>Qur’an / Islamic Studies</td><td>'+esc(names.join(', ')||'Not assigned')+'</td><td>'+enroll.filter(z=>z.status==='approved'&&assigned.some(a=>a.halaqaId===z.halaqaId)).length+'</td><td>'+esc(x.status)+(x.status==='pending'?' <button class="urwa-btn urwa-btn-primary urwa-btn-small" data-approve-teacher="'+x.id+'">Approve</button>':'')+'<div class="urwa-admin-actions"><select data-teacher-halaqa="'+x.id+'">'+opts('')+'</select><button class="urwa-btn urwa-btn-outline urwa-btn-small" data-assign="'+x.id+'">Assign</button></div></td></tr>';}).join(''),' <tr><td colspan="5">No Abla accounts. Create staff accounts in Firebase Authentication, then provision their role securely in Firestore.</td></tr>');
- const stats=$$('.urwa-stat-value');if(stats[0])stats[0].textContent=students.filter(x=>(byStudent.get(x.id)?.status||x.status)==='approved').length;if(stats[1])stats[1].textContent=attendance.length?Math.round(attendance.filter(x=>['present','late'].includes(x.status)).length/attendance.length*100)+'%':'—';if(stats[2])stats[2].textContent=teachers.filter(x=>x.status==='approved').length;status('admin-live-status','Firebase connection active',students.length+' students · '+pending.length+' pending applications · '+teachers.length+' Ablas · '+halaqas.length+' halaqas.');
- }catch(e){status('admin-live-status','Unable to load URWA records',e.message,true);}
+import { supabase } from './supabase.js';
+
+const $ = (selector, root = document) => root.querySelector(selector);
+const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (c) => ({
+  '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+}[c]));
+const date = (value) => value ? new Date(value).toLocaleDateString() : '—';
+const status = (id, title, message, bad = false) => {
+  const node = document.getElementById(id);
+  if (!node) return;
+  node.replaceChildren();
+  const heading = document.createElement('strong');
+  heading.textContent = title;
+  const detail = document.createElement('p');
+  detail.textContent = message;
+  node.append(heading, detail);
+  node.classList.toggle('is-error', bad);
+};
+const fail = (error) => { throw new Error(error?.message || 'The request could not be completed.'); };
+
+async function currentUser() {
+  const { data, error } = await supabase.auth.getUser();
+  if (error) fail(error);
+  if (!data.user) throw new Error('Please sign in again.');
+  return data.user;
 }
-function initAdmin(u){adminLoad();document.addEventListener('click',async ev=>{try{const accept=ev.target.closest('[data-accept]'),decline=ev.target.closest('[data-decline]'),approve=ev.target.closest('[data-approve-teacher]'),assign=ev.target.closest('[data-assign]');if(accept||decline){const id=(accept||decline).dataset[accept?'accept':'decline'],hid=$('[data-admission-halaqa="'+id+'"]')?.value||null;if(accept&&!hid)throw Error('Choose a halaqa before accepting.');const next=accept?'approved':'suspended';await updateDoc(doc(db,'studentEnrollments',id),{status:next,halaqaId:hid,reviewedBy:u.uid,reviewedAt:serverTimestamp()});await updateDoc(doc(db,'users',id),{status:next,updatedAt:serverTimestamp()});await adminLoad();}if(approve){await updateDoc(doc(db,'users',approve.dataset.approveTeacher),{status:'approved',updatedAt:serverTimestamp()});await adminLoad();}if(assign){const tid=assign.dataset.assign,hid=$('[data-teacher-halaqa="'+tid+'"]')?.value;if(!hid)throw Error('Choose a halaqa.');await setDoc(doc(db,'teacherAssignments',tid+'_'+hid),{teacherId:tid,halaqaId:hid,createdAt:serverTimestamp()});await adminLoad();}}catch(e){status('admin-live-status','Could not save change',e.message,true);}});
- const f=$('#admin-announcement-form');if(f)f.addEventListener('submit',async e=>{e.preventDefault();try{await addDoc(collection(db,'announcements'),{title:$('#announcement-title').value.trim(),message:$('#announcement-message').value.trim(),audience:$('#announcement-audience').value,publishedBy:u.uid,publishedAt:serverTimestamp()});f.reset();status('admin-live-status','Announcement published','Your announcement has been saved to Firestore.');}catch(x){status('admin-live-status','Announcement failed',x.message,true);}});
+
+async function adminLoad(user) {
+  try {
+    const [peopleQ, enrollQ, halaqaQ, assignmentQ, attendanceQ] = await Promise.all([
+      supabase.from('profiles').select('id,full_name,email,role,status'),
+      supabase.from('student_enrollments').select('*'),
+      supabase.from('halaqas').select('*').order('name'),
+      supabase.from('teacher_assignments').select('*'),
+      supabase.from('attendance').select('id,status')
+    ]);
+    [peopleQ, enrollQ, halaqaQ, assignmentQ, attendanceQ].forEach(q => { if (q.error) fail(q.error); });
+    const people = peopleQ.data || [], enroll = enrollQ.data || [], halaqas = halaqaQ.data || [];
+    const assignments = assignmentQ.data || [], attendance = attendanceQ.data || [];
+    const students = people.filter(p => p.role === 'student');
+    const teachers = people.filter(p => p.role === 'teacher');
+    const byStudent = new Map(enroll.map(e => [e.student_id, e]));
+    const byId = new Map(people.map(p => [p.id, p]));
+    const byHalaqa = new Map(halaqas.map(h => [h.id, h]));
+    const options = (selected) => '<option value="">Choose halaqa</option>' +
+      halaqas.filter(h => h.is_active).map(h => '<option value="' + h.id + '" ' +
+      (h.id === selected ? 'selected' : '') + '>' + esc(h.name) + '</option>').join('');
+    const pending = students.filter(p => (byStudent.get(p.id)?.status || p.status) === 'pending');
+    const put = (selector, html, empty) => { const node = $(selector); if (node) node.innerHTML = html || empty; };
+
+    put('#admin-admissions-body', pending.map(p => {
+      const e = byStudent.get(p.id) || {};
+      return '<tr><td><b>' + esc(p.full_name) + '</b><small>' + esc(p.email) +
+        '</small></td><td>' + esc(e.programme || '—') + '</td><td>' + date(e.created_at) +
+        '</td><td>Pending</td><td class="urwa-admin-actions"><select data-admission-halaqa="' +
+        p.id + '">' + options(e.halaqa_id) + '</select><button class="urwa-btn urwa-btn-primary urwa-btn-small" data-accept="' +
+        p.id + '">Accept</button><button class="urwa-btn urwa-btn-outline urwa-btn-small" data-decline="' +
+        p.id + '">Decline</button></td></tr>';
+    }).join(''), '<tr><td colspan="5">No pending student applications.</td></tr>');
+
+    put('#admin-students-body', students.map(p => {
+      const e = byStudent.get(p.id) || {}, h = byHalaqa.get(e.halaqa_id);
+      const ta = assignments.find(a => a.halaqa_id === e.halaqa_id);
+      const teacher = ta ? byId.get(ta.teacher_id) : null;
+      return '<tr><td><b>' + esc(p.full_name) + '</b><small>' + esc(p.email) +
+        '</small></td><td>' + esc(e.programme || '—') + '</td><td>' +
+        esc(h?.name || 'Not assigned') + '</td><td>' + esc(teacher?.full_name || 'Not assigned') +
+        '</td><td>' + esc(e.status || p.status) + '</td></tr>';
+    }).join(''), '<tr><td colspan="5">No student accounts yet.</td></tr>');
+
+    put('#admin-teachers-body', teachers.map(p => {
+      const assigned = assignments.filter(a => a.teacher_id === p.id);
+      const names = assigned.map(a => byHalaqa.get(a.halaqa_id)?.name).filter(Boolean);
+      const learnerCount = enroll.filter(e => e.status === 'approved' &&
+        assigned.some(a => a.halaqa_id === e.halaqa_id)).length;
+      return '<tr><td><b>' + esc(p.full_name) + '</b><small>' + esc(p.email) +
+        '</small></td><td>Qur’an / Islamic Studies</td><td>' + esc(names.join(', ') || 'Not assigned') +
+        '</td><td>' + learnerCount + '</td><td>' + esc(p.status) +
+        (p.status === 'pending' ? ' <button class="urwa-btn urwa-btn-primary urwa-btn-small" data-approve-teacher="' + p.id + '">Approve</button>' : '') +
+        '<div class="urwa-admin-actions"><select data-teacher-halaqa="' + p.id + '">' +
+        options('') + '</select><button class="urwa-btn urwa-btn-outline urwa-btn-small" data-assign="' +
+        p.id + '">Assign</button></div></td></tr>';
+    }).join(''), '<tr><td colspan="5">No Abla accounts. Staff accounts must be created through a trusted administrator workflow.</td></tr>');
+
+    const stats = $$('.urwa-stat-value');
+    if (stats[0]) stats[0].textContent = students.filter(p => (byStudent.get(p.id)?.status || p.status) === 'approved').length;
+    if (stats[1]) stats[1].textContent = attendance.length
+      ? Math.round(attendance.filter(a => ['present', 'late'].includes(a.status)).length / attendance.length * 100) + '%' : '—';
+    if (stats[2]) stats[2].textContent = teachers.filter(p => p.status === 'approved').length;
+    status('admin-live-status', 'Supabase connection active',
+      students.length + ' students · ' + pending.length + ' pending applications · ' +
+      teachers.length + ' Ablas · ' + halaqas.length + ' halaqas.');
+  } catch (error) {
+    status('admin-live-status', 'Unable to load URWA records', error.message, true);
+  }
 }
-async function studentLoad(u){const es=await getDoc(doc(db,'studentEnrollments',u.uid));const e=es.exists()?es.data():{};const [ats,as,hs,ms]=await Promise.all([getDocs(query(collection(db,'attendance'),where('studentId','==',u.uid))),getDocs(query(collection(db,'assignments'),where('halaqaId','==',e.halaqaId||'__none__'),orderBy('createdAt','desc'))),getDocs(query(collection(db,'hifdhRecords'),where('studentId','==',u.uid))),getDocs(query(collection(db,'murajaahRecords'),where('studentId','==',u.uid)))]);const att=ats.docs.map(d=>d.data()),all=as.docs.map(d=>d.data()),list=all.filter(x=>x.halaqaId===e.halaqaId);let hn='Not assigned';if(e.halaqaId){const h=await getDoc(doc(db,'halaqas',e.halaqaId));if(h.exists())hn=h.data().name;}const panel=$('#student-assignments-list');if(panel)panel.innerHTML=list.length?list.map(x=>'<article><b>'+esc(x.title)+'</b><p>'+esc(x.assignmentType||'Learning task')+' · Due '+date(x.dueDate)+'</p><p>'+esc(x.instructions||'Follow your Abla’s instructions.')+'</p></article>').join(''):'<b>No assignments yet</b><p>Your Abla’s assignments will appear here.</p>';const rate=att.length?Math.round(att.filter(x=>['present','late'].includes(x.status)).length/att.length*100)+'%':'No records';status('student-live-overview','Your live learning overview',(e.programme||'Programme awaiting confirmation')+' · '+hn+' · Admission: '+(e.status||'not submitted')+' · Attendance: '+rate+' · Assignments: '+list.length+' · Hifdh entries: '+hs.size+' · Muraja’ah entries: '+ms.size);}
-async function teacherLoad(u){const [tas,ass]=await Promise.all([getDocs(query(collection(db,'teacherAssignments'),where('teacherId','==',u.uid))),getDocs(query(collection(db,'assignments'),where('teacherId','==',u.uid)))]);const ids=tas.docs.map(d=>d.data().halaqaId),allH=await rows('halaqas'),halaqas=allH.filter(h=>ids.includes(h.id));let enroll=[],attendance=[];if(ids.length){const [e,a]=await Promise.all([getDocs(query(collection(db,'studentEnrollments'),where('halaqaId','in',ids.slice(0,10)),where('status','==','approved'))),getDocs(query(collection(db,'attendance'),where('halaqaId','in',ids.slice(0,10))))]);enroll=e.docs.map(d=>({id:d.id,...d.data()}));attendance=a.docs.map(d=>d.data());}const users=await Promise.all(enroll.map(x=>getDoc(doc(db,'users',x.studentId))));const roster=$('#teacher-attendance-roster');if(roster)roster.innerHTML=enroll.length?'<div class="urwa-table-wrap"><table class="urwa-table"><thead><tr><th>Student</th><th>Halaqa</th><th>Attendance</th></tr></thead><tbody>'+enroll.map((e,i)=>{const p=users[i].data()||{};return '<tr data-attendance-row="'+e.studentId+'" data-halaqa-id="'+e.halaqaId+'"><td>'+esc(p.fullName||'Student')+'<small>'+esc(p.email||'')+'</small></td><td>'+esc(halaqas.find(h=>h.id===e.halaqaId)?.name||'')+'</td><td><select data-attendance-status><option value="present">Present</option><option value="late">Late</option><option value="absent">Absent</option><option value="excused">Excused</option></select></td></tr>';}).join('')+'</tbody></table></div><button class="urwa-btn urwa-btn-primary urwa-btn-small" type="button" data-save-attendance>Save attendance</button><p id="teacher-attendance-message" role="status"></p>':'<b>No approved students assigned yet.</b>';const sel=$('#assignment-students');if(sel)sel.innerHTML='<option value="">Choose your halaqa</option>'+halaqas.map(h=>'<option value="'+h.id+'">'+esc(h.name)+'</option>').join('');status('teacher-live-overview','Your teaching workspace is connected',halaqas.length+' halaqas · '+enroll.length+' approved students · '+attendance.length+' attendance records · '+ass.size+' assignments.');
- const f=$('#teacher-assignment-form');if(f)f.addEventListener('submit',async e=>{e.preventDefault();const b=f.querySelector('[type=submit]');b.disabled=true;try{await addDoc(collection(db,'assignments'),{halaqaId:sel.value,teacherId:u.uid,title:$('#assignment-title').value.trim(),assignmentType:$('#assignment-type').value,instructions:$('#assignment-instructions').value.trim(),dueDate:$('#assignment-due').value||null,createdAt:serverTimestamp()});$('#teacher-assignment-message').textContent='Assignment published.';f.reset();}catch(x){$('#teacher-assignment-message').textContent=x.message;}finally{b.disabled=false;}});
- document.addEventListener('click',async ev=>{const b=ev.target.closest('[data-save-attendance]');if(!b)return;b.disabled=true;try{const day=$('#teacher-attendance-date')?.value||new Date().toISOString().slice(0,10);for(const row of $$('[data-attendance-row]')){const sid=row.dataset.attendanceRow,hid=row.dataset.halaqaId;await setDoc(doc(db,'attendance',hid+'_'+sid+'_'+day),{halaqaId:hid,studentId:sid,classDate:day,status:$('[data-attendance-status]',row).value,recordedBy:u.uid},{merge:true});}$('#teacher-attendance-message').textContent='Attendance saved.';}catch(x){$('#teacher-attendance-message').textContent=x.message;}finally{b.disabled=false;}});
+
+async function initAdmin(user) {
+  await adminLoad(user);
+  document.addEventListener('click', async (event) => {
+    try {
+      const accept = event.target.closest('[data-accept]');
+      const decline = event.target.closest('[data-decline]');
+      const approve = event.target.closest('[data-approve-teacher]');
+      const assign = event.target.closest('[data-assign]');
+      if (accept || decline) {
+        const id = (accept || decline).dataset[accept ? 'accept' : 'decline'];
+        const halaqaId = $('[data-admission-halaqa="' + id + '"]')?.value || null;
+        if (accept && !halaqaId) throw new Error('Choose a halaqa before accepting.');
+        const next = accept ? 'approved' : 'suspended';
+        const { error } = await supabase.from('student_enrollments').update({
+          status: next, halaqa_id: halaqaId, reviewed_by: user.id, reviewed_at: new Date().toISOString()
+        }).eq('student_id', id);
+        if (error) fail(error);
+        const profileUpdate = await supabase.from('profiles').update({ status: next }).eq('id', id);
+        if (profileUpdate.error) fail(profileUpdate.error);
+        await adminLoad(user);
+      }
+      if (approve) {
+        const { error } = await supabase.from('profiles').update({ status: 'approved' }).eq('id', approve.dataset.approveTeacher);
+        if (error) fail(error);
+        await adminLoad(user);
+      }
+      if (assign) {
+        const teacherId = assign.dataset.assign;
+        const halaqaId = $('[data-teacher-halaqa="' + teacherId + '"]')?.value;
+        if (!halaqaId) throw new Error('Choose a halaqa.');
+        const { error } = await supabase.from('teacher_assignments').insert({ teacher_id: teacherId, halaqa_id: halaqaId });
+        if (error) fail(error);
+        await adminLoad(user);
+      }
+    } catch (error) { status('admin-live-status', 'Could not save change', error.message, true); }
+  });
+
+  const form = $('#admin-announcement-form');
+  if (form) form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    try {
+      const { error } = await supabase.from('announcements').insert({
+        title: $('#announcement-title').value.trim(),
+        message: $('#announcement-message').value.trim(),
+        audience: $('#announcement-audience').value,
+        published_by: user.id
+      });
+      if (error) fail(error);
+      form.reset();
+      status('admin-live-status', 'Announcement published', 'Your announcement has been saved to Supabase.');
+    } catch (error) { status('admin-live-status', 'Announcement failed', error.message, true); }
+  });
 }
-onAuthStateChanged(auth,u=>{if(!u)return;const role=document.body.dataset.urwaRole;if(role==='admin')initAdmin(u);if(role==='student')studentLoad(u).catch(e=>status('student-live-overview','Could not load records',e.message,true));if(role==='teacher')teacherLoad(u).catch(e=>status('teacher-live-overview','Could not load records',e.message,true));});
+
+async function studentLoad(user) {
+  const [enrollmentQ, attendanceQ, assignmentQ, hifdhQ, murajaahQ] = await Promise.all([
+    supabase.from('student_enrollments').select('*').eq('student_id', user.id).maybeSingle(),
+    supabase.from('attendance').select('status').eq('student_id', user.id),
+    supabase.from('assignments').select('*').order('created_at', { ascending: false }),
+    supabase.from('hifdh_records').select('id').eq('student_id', user.id),
+    supabase.from('murajaah_records').select('id').eq('student_id', user.id)
+  ]);
+  [enrollmentQ, attendanceQ, assignmentQ, hifdhQ, murajaahQ].forEach(q => { if (q.error) fail(q.error); });
+  const enrollment = enrollmentQ.data || {};
+  const assignments = (assignmentQ.data || []).filter(a => a.halaqa_id === enrollment.halaqa_id);
+  let halaqaName = 'Not assigned';
+  if (enrollment.halaqa_id) {
+    const { data, error } = await supabase.from('halaqas').select('name').eq('id', enrollment.halaqa_id).maybeSingle();
+    if (error) fail(error);
+    if (data) halaqaName = data.name;
+  }
+  const panel = $('#student-assignments-list');
+  if (panel) panel.innerHTML = assignments.length ? assignments.map(a =>
+    '<article><b>' + esc(a.title) + '</b><p>' + esc(a.assignment_type || 'Learning task') +
+    ' · Due ' + date(a.due_date) + '</p><p>' + esc(a.instructions || 'Follow your Abla’s instructions.') +
+    '</p></article>').join('') : '<b>No assignments yet</b><p>Your Abla’s assignments will appear here.</p>';
+  const attendance = attendanceQ.data || [];
+  const rate = attendance.length ? Math.round(attendance.filter(a => ['present', 'late'].includes(a.status)).length / attendance.length * 100) + '%' : 'No records';
+  status('student-live-overview', 'Your live learning overview',
+    (enrollment.programme || 'Programme awaiting confirmation') + ' · ' + halaqaName +
+    ' · Admission: ' + (enrollment.status || 'not submitted') + ' · Attendance: ' + rate +
+    ' · Assignments: ' + assignments.length + ' · Hifdh entries: ' + hifdhQ.data.length +
+    ' · Muraja’ah entries: ' + murajaahQ.data.length);
+}
+
+async function teacherLoad(user) {
+  const [assignmentLinksQ, assignmentsQ] = await Promise.all([
+    supabase.from('teacher_assignments').select('*').eq('teacher_id', user.id),
+    supabase.from('assignments').select('*').eq('teacher_id', user.id)
+  ]);
+  [assignmentLinksQ, assignmentsQ].forEach(q => { if (q.error) fail(q.error); });
+  const links = assignmentLinksQ.data || [], halaqaIds = links.map(a => a.halaqa_id);
+  let halaqas = [], enrollments = [], attendance = [];
+  if (halaqaIds.length) {
+    const [h, e, a] = await Promise.all([
+      supabase.from('halaqas').select('*').in('id', halaqaIds),
+      supabase.from('student_enrollments').select('*').in('halaqa_id', halaqaIds).eq('status', 'approved'),
+      supabase.from('attendance').select('*').in('halaqa_id', halaqaIds)
+    ]);
+    [h, e, a].forEach(q => { if (q.error) fail(q.error); });
+    halaqas = h.data || []; enrollments = e.data || []; attendance = a.data || [];
+  }
+  let studentProfiles = [];
+  if (enrollments.length) {
+    const { data, error } = await supabase.from('profiles').select('id,full_name,email')
+      .in('id', enrollments.map(e => e.student_id));
+    if (error) fail(error);
+    studentProfiles = data || [];
+  }
+  const byStudent = new Map(studentProfiles.map(p => [p.id, p]));
+  const roster = $('#teacher-attendance-roster');
+  if (roster) roster.innerHTML = enrollments.length
+    ? '<div class="urwa-table-wrap"><table class="urwa-table"><thead><tr><th>Student</th><th>Halaqa</th><th>Attendance</th></tr></thead><tbody>' +
+      enrollments.map(e => {
+        const p = byStudent.get(e.student_id) || {};
+        return '<tr data-attendance-row="' + e.student_id + '" data-halaqa-id="' + e.halaqa_id +
+          '"><td>' + esc(p.full_name || 'Student') + '<small>' + esc(p.email || '') +
+          '</small></td><td>' + esc(halaqas.find(h => h.id === e.halaqa_id)?.name || '') +
+          '</td><td><select data-attendance-status><option value="present">Present</option><option value="late">Late</option><option value="absent">Absent</option><option value="excused">Excused</option></select></td></tr>';
+      }).join('') + '</tbody></table></div><button class="urwa-btn urwa-btn-primary urwa-btn-small" type="button" data-save-attendance>Save attendance</button><p id="teacher-attendance-message" role="status"></p>'
+    : '<b>No approved students assigned yet.</b>';
+
+  const select = $('#assignment-students');
+  if (select) select.innerHTML = '<option value="">Choose your halaqa</option>' +
+    halaqas.map(h => '<option value="' + h.id + '">' + esc(h.name) + '</option>').join('');
+  status('teacher-live-overview', 'Your teaching workspace is connected',
+    halaqas.length + ' halaqas · ' + enrollments.length + ' approved students · ' +
+    attendance.length + ' attendance records · ' + assignmentsQ.data.length + ' assignments.');
+
+  const form = $('#teacher-assignment-form');
+  if (form) form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const button = form.querySelector('[type=submit]');
+    if (button) button.disabled = true;
+    try {
+      const halaqaId = select?.value;
+      if (!halaqaId) throw new Error('Choose your halaqa first.');
+      const { error } = await supabase.from('assignments').insert({
+        halaqa_id: halaqaId, teacher_id: user.id,
+        title: $('#assignment-title').value.trim(),
+        assignment_type: $('#assignment-type').value,
+        instructions: $('#assignment-instructions').value.trim(),
+        due_date: $('#assignment-due').value || null
+      });
+      if (error) fail(error);
+      $('#teacher-assignment-message').textContent = 'Assignment published.';
+      form.reset();
+    } catch (error) { $('#teacher-assignment-message').textContent = error.message; }
+    finally { if (button) button.disabled = false; }
+  });
+
+  document.addEventListener('click', async (event) => {
+    const button = event.target.closest('[data-save-attendance]');
+    if (!button) return;
+    button.disabled = true;
+    try {
+      const classDate = $('#teacher-attendance-date')?.value || new Date().toISOString().slice(0, 10);
+      const records = $$('[data-attendance-row]').map(row => ({
+        halaqa_id: row.dataset.halaqaId,
+        student_id: row.dataset.attendanceRow,
+        class_date: classDate,
+        status: $('[data-attendance-status]', row).value,
+        recorded_by: user.id
+      }));
+      if (records.length) {
+        const { error } = await supabase.from('attendance').insert(records);
+        if (error) fail(error);
+      }
+      $('#teacher-attendance-message').textContent = 'Attendance saved.';
+    } catch (error) { $('#teacher-attendance-message').textContent = error.message; }
+    finally { button.disabled = false; }
+  });
+}
+
+(async () => {
+  try {
+    const user = await currentUser();
+    const role = document.body.dataset.urwaRole;
+    if (role === 'admin') await initAdmin(user);
+    if (role === 'student') await studentLoad(user);
+    if (role === 'teacher') await teacherLoad(user);
+  } catch (error) {
+    const role = document.body.dataset.urwaRole;
+    status(role === 'student' ? 'student-live-overview' : role === 'teacher' ? 'teacher-live-overview' : 'admin-live-status',
+      'Could not load records', error.message, true);
+  }
+})();
